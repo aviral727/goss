@@ -1,23 +1,33 @@
-from flask import Flask
+from flask import Flask, render_template, request, redirect
+
 
 app = Flask(__name__)
 
+# Temporary in-memory database
+posts = []
+
 @app.route('/')
 def home():
-    return "Welcome to My Social Media Backend!"
+    username = "Aviral"
+    return render_template('home.html', username=username, posts=posts)
 
-@app.route('/user')
-def user():
-    return "User profile endpoint"
+@app.route('/add_post', methods=['POST'])
+def add_post():
+    content = request.form['content']
+    posts.append(content)
+    return redirect('/')
 
-@app.route('/posts')
-def posts():
-    return "List of all posts"
+@app.route('/delete_post/<int:index>')
+def delete_post(index):
+    if 0 <= index < len(posts):
+        posts.pop(index)
+    return redirect('/')
 
-@app.route('/greet/<username>')
-def greet(username):
-    return f"Hello, {username}! Welcome to Social Media API"
-
+@app.route('/clear_posts', methods=['POST'])
+def clear_posts():
+    global posts  # if posts is stored as a global variable
+    posts = []  # clear all posts
+    return redirect('/')  # go back to home page
 
 
 if __name__ == '__main__':
