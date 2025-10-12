@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Welcome, {{ username }} 👋</h2>
+
+    <form action="/add_post" method="POST">
+        <input type="text" name="content" placeholder="What's on your mind?" required>
+        <button type="submit">Post</button>
+    </form>
+    <form action="/clear_posts" method="POST" style="margin-top: 10px;">
+    <button type="submit">🧹 Clear All Posts</button>
+</form>
+
+
+    <h3>Your Posts:</h3>
+    <ul>
+        {% if posts %}
+            {% for post in posts %}
+                <li>
+                    {{ loop.index }}. {{ post }}
+                    <a href="/delete_post/{{ loop.index }}">🗑 Delete</a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>No posts yet.</li>
+        {% endif %}
+    </ul>
+{% endblock %}
